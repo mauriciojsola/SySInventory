@@ -1,1 +1,1 @@
-# Just a proof of concept of a stock system.
+Just a proof of concept of a stock system.
