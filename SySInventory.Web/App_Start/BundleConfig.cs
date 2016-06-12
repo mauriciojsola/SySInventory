@@ -9,10 +9,10 @@ namespace SySInventory.Web
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/ladda-bootstrap/*.min.js",
                         "~/Scripts/URI.js",
                         "~/Scripts/gridmvc.js",
                         "~/Scripts/gridmvc-ext.js",
-                        "~/Scripts/ladda-bootstrap/*.min.js",
                         "~/Scripts/sys/manage-products.js"
                         ));
 
@@ -32,7 +32,7 @@ namespace SySInventory.Web
                       "~/Content/bootstrap.css",
                       "~/Content/font-awesome.min.css",
                       "~/Content/site.css",
-                      "~/Content/GridMvc/Gridmvc.css",
+                      "~/Content/Gridmvc.css",
                       "~/Content/ladda-bootstrap/ladda-themeless.min.css"));
             
 

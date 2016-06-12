@@ -1,17 +1,26 @@
 ﻿@using GridMvc.Html
-@using GridMvc.Sorting
+@using SySInventory.Core.Model.Entities
 @model Grid.Mvc.Ajax.GridExtensions.AjaxGrid<SySInventory.Core.Model.Entities.Product>
 
+@functions {
+    private string RenderActionLinks(Product product)
+    {
+        return string.Format("{0} | {1}", Html.ActionLink("Editar", "Edit", new { controller = "Products", id = product.Id }, null).ToHtmlString(), Html.ActionLink("Eliminar", "Delete", new { controller = "Products", id = product.Id }, null).ToHtmlString());
+    }
+}
 
 @(
-
-    @Html.Grid(Model, "_Grid").Named("productsList").Columns(columns =>
+    @Html.Grid(Model).Named("productsList").Columns(columns =>
     {
-        columns.Add(car => car.Code).Titled("Codigo").SetWidth(100).Encoded(false).Sanitized(false).Sortable(true).SortInitialDirection(GridSortDirection.Ascending);
-        columns.Add(car => car.Description).Titled("Descripcion").SetWidth(100).Encoded(false).Sanitized(false).Sortable(true);
-        columns.Add(car => car.CostPrice).Titled("Costo").SetWidth(100).Encoded(false).Sanitized(false).Sortable(true);
-        columns.Add(car => car.RetailPrice).Titled("Minorista").SetWidth(100).Encoded(false).Sanitized(false).Sortable(true);
-    }).WithPaging(3).Filterable().WithMultipleFilters()
+        columns.Add(c => c.Code).Titled("Codigo").SetWidth(75);
+        columns.Add(c => c.Description).Titled("Descripcion").SetWidth(100);
+        columns.Add(c => c.Category.Name).Titled("Categoria").SetWidth(100);
+        columns.Add(c => c.CostPrice).Titled("Costo").SetWidth(50);
+        columns.Add(c => c.RetailPrice).Titled("Minorista").SetWidth(50);
+        columns.Add(c => c.DateCreated).Titled("Creado").SetWidth(75).Format("{0:dd/MM/yyyy}");
+        columns.Add(c => c.DateModified).Titled("Modificado").SetWidth(75).Format("{0:dd/MM/yyyy}");
+        columns.Add().Titled("Acciones").SetWidth(50).Encoded(false).Sanitized(false).RenderValueAs(o => RenderActionLinks(o));
+    }).Sortable(true).Filterable(true).WithPaging(10)
 
 
 )

@@ -11,6 +11,7 @@ namespace SySInventory.Core.Test.Repository
     {
         public IUnitOfWorkProvider UnitOfWorkProvider { get; set; }
         public T Repository { get; set; }
+        private IUnitOfWork Uow;
 
         [TestInitialize]
         public override void TestInitialize()
@@ -19,11 +20,13 @@ namespace SySInventory.Core.Test.Repository
             Container.InjectProperties(this);
             UnitOfWorkProvider = Container.Resolve<IUnitOfWorkProvider>();
             Repository = Container.Resolve<T>();
+            Uow = UnitOfWorkProvider.BeginUnitOfWork();
         }
 
         [TestCleanup]
         public override void TestCleanup()
         {
+            Uow.Rollback();
             base.TestCleanup();
         }
 

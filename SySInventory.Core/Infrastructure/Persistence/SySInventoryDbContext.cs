@@ -6,6 +6,7 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using SySInventory.Core.Model.Entities;
@@ -51,35 +52,45 @@ namespace SySInventory.Core.Infrastructure.Persistence
             base.OnModelCreating(modelBuilder);
         }
 
-        //public override int SaveChanges()
-        //{
-        //    ChangeTracker.DetectChanges(); // Important!
+        public override int SaveChanges()
+        {
+            ChangeTracker.DetectChanges(); // Important!
 
-        //    var ctx = ((IObjectContextAdapter)this).ObjectContext;
+            var ctx = ((IObjectContextAdapter)this).ObjectContext;
 
-        //    var objectStateEntryList = ctx.ObjectStateManager.GetObjectStateEntries(EntityState.Added
-        //                                                   | EntityState.Modified
-        //                                                   | EntityState.Deleted).ToList();
+            var objectStateEntryList = ctx.ObjectStateManager.GetObjectStateEntries(EntityState.Added
+                                                           | EntityState.Modified
+                                                           | EntityState.Deleted).ToList();
 
-        //    foreach (var entry in objectStateEntryList.Where(entry => !entry.IsRelationship))
-        //    {
-        //        switch (entry.State)
-        //        {
-        //            case EntityState.Added:
-        //                // write log...
-        //                break;
-        //            case EntityState.Deleted:
-        //                // write log...
-        //                break;
-        //            case EntityState.Modified:
-        //                {
-        //                    //
-        //                    break;
-        //                }
-        //        }
-        //    }
-        //    return base.SaveChanges();
-        //}
+            foreach (var entry in objectStateEntryList.Where(entry => !entry.IsRelationship))
+            {
+                var auditableEntity = entry.Entity as IEntityAuditable;
+
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        {
+                            if (auditableEntity != null)
+                            {
+                                auditableEntity.DateCreated = DateTime.Now;
+                                auditableEntity.DateModified = auditableEntity.DateCreated;
+                            }
+                            break;
+                        }
+                    case EntityState.Modified:
+                        {
+                            if (auditableEntity != null)
+                            {
+                                auditableEntity.DateModified = DateTime.Now;
+                            }
+                            break;
+                        }
+                    case EntityState.Deleted:
+                        break;
+                }
+            }
+            return base.SaveChanges();
+        }
 
     }
 

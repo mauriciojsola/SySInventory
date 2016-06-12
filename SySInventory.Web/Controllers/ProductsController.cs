@@ -8,6 +8,8 @@ using SySInventory.Web.Helpers;
 
 namespace SySInventory.Web.Controllers
 {
+    [RoutePrefix("productos")]
+    [Route("{action=index}")]
     public class ProductsController : ControllerBase
     {
         public IProductRepository ProductRepository { get; set; }
@@ -21,11 +23,13 @@ namespace SySInventory.Web.Controllers
             _gridMvcHelper = new GridMvcHelper();
         }
 
+        [Route("")]
         public ActionResult Index()
         {
             return View();
         }
 
+        [ChildActionOnly]
         public ActionResult GetGrid()
         {
             var products = ProductRepository.GetAll().OrderBy(x => x.Description);
@@ -37,53 +41,25 @@ namespace SySInventory.Web.Controllers
         public ActionResult GridPager(int? page)
         {
             object jsonData = null;
-            InUnitOfWork(() =>
-            {
-                var products = ProductRepository.GetAll().OrderBy(x => x.Description);
-                var grid = _gridMvcHelper.GetAjaxGrid(products, page);
-                jsonData = _gridMvcHelper.GetGridJsonData(grid, GRID_PARTIAL_PATH, this);
-            });
+            //InUnitOfWork(() =>
+            //{
+            var products = ProductRepository.GetAll().OrderBy(x => x.Description);
+            var grid = _gridMvcHelper.GetAjaxGrid(products, page);
+            jsonData = _gridMvcHelper.GetGridJsonData(grid, GRID_PARTIAL_PATH, this);
+            //});
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-
-        // GET: Products
-        //public ActionResult Index()
-        //{
-        //    var products = ProductRepository.GetAll();
-        //    var grid = (AjaxGrid<Product>)new AjaxGridFactory().CreateAjaxGrid(products, 1, false);
-
-        //    return View(grid);
-        //}
-
-        //private IQueryable<ProductModel> Data()
-        //{
-        //    var cars = new List<ProductModel>()
-        //        {
-        //            new ProductModel
-        //                    {
-        //                        Code = "PRODUCTO1",Description = "DESCRIPCION 1",CostPrice = 20.0m,RetailPrice = 25.0m,WholesalePrice = 30.0m
-        //                    },
-        //            new ProductModel
-        //                    {
-        //                        Code = "PRODUCTO2",Description = "DESCRIPCION 2",CostPrice = 20.0m,RetailPrice = 25.0m,WholesalePrice = 30.0m
-        //                    }
-
-        //        }.AsQueryable();
-
-        //    return cars;
-        //}
-
-
         // GET: Products/Details/5
-        public ActionResult Details(int? id)
+        [Route("{id}/detalles")]
+        public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var product = ProductRepository.GetById(id.Value);
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+            var product = ProductRepository.GetById(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -92,6 +68,7 @@ namespace SySInventory.Web.Controllers
         }
 
         // GET: Products/Create
+        [Route("crear")]
         public ActionResult Create()
         {
             ViewBag.ProductCategoryId = new SelectList(ProductCategoryRepository.GetAll().ToList(), "Id", "Name");
@@ -102,6 +79,7 @@ namespace SySInventory.Web.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("crear")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Code,Description,CostPrice,RetailPrice,WholesalePrice,ProductCategoryId")] Product product)
         {
@@ -116,13 +94,15 @@ namespace SySInventory.Web.Controllers
         }
 
         // GET: Products/Edit/5
-        public ActionResult Edit(int? id)
+        [HttpGet]
+        [Route("{id}/editar")]
+        public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var product = ProductRepository.GetById(id.Value);
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+            var product = ProductRepository.GetById(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -136,24 +116,20 @@ namespace SySInventory.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Code,Description,CostPrice,RetailPrice,WholesalePrice,ProductCategoryId")] Product product)
+        [Route("editar")]
+        public ActionResult Update([Bind(Include = "Id,Code,Description,CostPrice,RetailPrice,WholesalePrice,ProductCategoryId")] Product product)
         {
             if (ModelState.IsValid)
             {
-                //var editProduct = ProductRepository.GetById(product.Id);
-                //if (editProduct != null)
-                //{
-                //    editProduct.Code = product.Code;
                 ProductRepository.Update(product);
-                //}
-
                 return RedirectToAction("Index");
             }
             ViewBag.ProductCategoryId = new SelectList(ProductCategoryRepository.GetAll().ToList(), "Id", "Name", product.ProductCategoryId);
-            return View(product);
+            return View("Edit", product);
         }
 
         // GET: Products/Delete/5
+        [Route("{id}/eliminar")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -169,23 +145,16 @@ namespace SySInventory.Web.Controllers
         }
 
         // POST: Products/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [Route("eliminar")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product product = ProductRepository.GetById(id);
+            var product = ProductRepository.GetById(id);
             ProductRepository.Remove(product);
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            //if (disposing)
-            //{
-            //    db.Dispose();
-            //}
-            base.Dispose(disposing);
-        }
     }
 
     public static class ModelStateHelper

@@ -3,9 +3,15 @@
     ViewBag.Title = "Lista de Productos";
 }
 
+<br/>
+<div class="row">
+   @Html.ActionLink("Agregar Producto", "Create", null, new { @class = "btn btn-primary pull-right" })
+</div>
+
 <div class="row">
     @Html.Action("GetGrid")
 </div>
+
 
 
 @section scripts
@@ -13,7 +19,7 @@
     <script type="text/javascript">
        sys.manageProducts.init(
        {
-           getDataUrl: '@Url.Action("GetGrid")',
+           getDataUrl: '@Url.Action("GridPager")',
            getPagedDataUrl: '@Url.Action("GridPager")'
        });
     </script>

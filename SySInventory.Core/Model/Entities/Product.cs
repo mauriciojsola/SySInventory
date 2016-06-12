@@ -1,6 +1,6 @@
 ﻿namespace SySInventory.Core.Model.Entities
 {
-    public class Product : EntityBase
+    public class Product : AuditableEntityBase
     {
         public string Code { get; set; }
         public string Description { get; set; }

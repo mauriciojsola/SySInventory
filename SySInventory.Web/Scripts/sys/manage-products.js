@@ -34,10 +34,6 @@ sys.manageProducts = (function (my, $) {
     my.init = function (urls) {
         $(function () {
 
-            $.ajaxSetup({
-                cache: false
-            });
-
             $('.grid-mvc').gridmvc();
 
             pageGrids.productsList.ajaxify({

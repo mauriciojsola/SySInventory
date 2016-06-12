@@ -68,8 +68,10 @@
     <Compile Include="Infrastructure\Persistence\UnitOfWork.cs" />
     <Compile Include="Infrastructure\Persistence\WebBasedContextProvider.cs" />
     <Compile Include="Infrastructure\Persistence\WebBasedUnitOfWorkProvider.cs" />
-    <Compile Include="Model\EntityBase.cs" />
-    <Compile Include="Model\IIdentifiable.cs" />
+    <Compile Include="Model\Entities\AuditableEntityBase.cs" />
+    <Compile Include="Model\Entities\EntityBase.cs" />
+    <Compile Include="Model\Entities\IEntityAuditable.cs" />
+    <Compile Include="Model\Entities\IEntityIdentifiable.cs" />
     <Compile Include="Model\Entities\Product.cs" />
     <Compile Include="Model\Entities\ProductCategory.cs" />
     <Compile Include="Model\Mappings\EntityMappingBase.cs" />

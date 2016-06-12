@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Linq.Expressions;
 using SySInventory.Core.Common.Extensions;
 using SySInventory.Core.Infrastructure.Persistence;
-using SySInventory.Core.Model;
+using SySInventory.Core.Model.Entities;
 
 namespace SySInventory.Core.Repository
 {
-    public class BaseRepository<T> : IRepository<T> where T : class, IIdentifiable
+    public class BaseRepository<T> : IRepository<T> where T : class, IEntityIdentifiable
     {
-        private static readonly Expression<Func<IIdentifiable, int>> ID_PROP = d => d.Id;
+        private static readonly Expression<Func<IEntityIdentifiable, int>> ID_PROP = d => d.Id;
         private static readonly string ID_PROP_NAME = ID_PROP.GetPropertyName();
 
         private IContextProvider _objectContextProvider { get; set; }

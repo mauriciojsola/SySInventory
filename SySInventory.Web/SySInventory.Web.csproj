@@ -151,6 +151,7 @@
     </Compile>
     <Compile Include="Helpers\GridMvcHelper.cs" />
     <Compile Include="MvcIoCModule.cs" />
+    <Compile Include="Controllers\ProductCategoriesController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -209,8 +210,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Products\Create.cshtml" />
     <Content Include="Views\Products\Delete.cshtml" />
@@ -221,7 +220,11 @@
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Shared\_AjaxGridPager.cshtml" />
     <Content Include="Views\Products\List.cshtml" />
-    <Content Include="Views\Products\Index - Copy %282%29.cshtml" />
+    <Content Include="Views\ProductCategories\Create.cshtml" />
+    <Content Include="Views\ProductCategories\Delete.cshtml" />
+    <Content Include="Views\ProductCategories\Details.cshtml" />
+    <Content Include="Views\ProductCategories\Edit.cshtml" />
+    <Content Include="Views\ProductCategories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
